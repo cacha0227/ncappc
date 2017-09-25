@@ -115,7 +115,8 @@ histobs.plot <- function(plotData,
     df$TYPE <- factor(df$TYPE, levels=param[p], labels=fctNm[fctNm$prmNm==param[p],"prmUnit"])
     df$FCT  <- paste0(df$TYPE,"\nmedian(obs)=",out.digits(df$medianObs[1],dig=4),"\n+/-spread=(",out.digits(df$sprlow[1],dig=4),",",out.digits(df$sprhgh[1],dig=4),")")
     xl <- df$xlow[1]; xu <- df$xhgh[1]
-    bw <- diff(range(as.numeric(df$Obs)))/(2*IQR(as.numeric(df$Obs)))/length(as.numeric(df$Obs))^(1/3)
+    bw <- diff(range(range(as.numeric(df$Obs))))/round(sqrt(length(as.numeric(df$Obs))),0)
+    # bw <- diff(range(as.numeric(df$Obs)))/(2*IQR(as.numeric(df$Obs)))/length(as.numeric(df$Obs))^(1/3)
     
     gplt[[p]] <- ggplot(df,aes(x=as.numeric(Obs))) +
       geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white", binwidth = bw) +
