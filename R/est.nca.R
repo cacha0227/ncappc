@@ -187,7 +187,6 @@ est.nca <- function(time,
   
   # Check if the number of observations is at least 3, otherwise skip the operation
   if(length(nconc) >= 2){
-    
     # Steady state data
     if(doseType == "ss"){
       if(is.null(doseTime)){
@@ -320,7 +319,7 @@ est.nca <- function(time,
     if(length(lconc) >= 3){
       lconc <- log(lconc)
       lnPt  <- length(lconc)
-      infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
+      infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0),index=numeric(0))
       
       for (r in 1:(lnPt-2)){
         mlr  <- lm(lconc[r:lnPt]~ltime[r:lnPt])
@@ -329,7 +328,7 @@ est.nca <- function(time,
         n    <- (lnPt-r)+1
         rsq  <- summary(mlr)$r.squared
         trsq <- 1-((1-rsq)*(n-1)/(n-2))  # adjusted r^2
-        tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]))
+        tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]),index=r)
         infd <- rbind(infd,tmp)
       }
       if(nrow(infd) != 0){
@@ -341,6 +340,9 @@ est.nca <- function(time,
             No_points_Lambda_z <- infd$np[r]
             slope              <- infd$m[r]
             intercept          <- infd$inpt[r]
+            index              <- infd$index[r]
+            regConc            <- paste(lconc[index:lnPt],collapse=",")
+            regTime            <- paste(ltime[index:lnPt],collapse=",")
           }else{
             tarsq <- infd$arsq[r]
             tDPt  <- infd$np[r]
@@ -351,6 +353,9 @@ est.nca <- function(time,
             No_points_Lambda_z <- tDPt
             slope              <- infd$m[r]
             intercept          <- infd$inpt[r]
+            index              <- infd$index[r]
+            regConc            <- paste(lconc[index:lnPt],collapse=",")
+            regTime            <- paste(ltime[index:lnPt],collapse=",")
           }
         }
         Corr_XY     <- -1*sqrt(Rsq)
@@ -620,6 +625,8 @@ est.nca <- function(time,
   if(!exists("AUClower_upper")) AUClower_upper <- NA
   if(!exists("Rsq")) Rsq <- NA
   if(!exists("Rsq_adjusted")) Rsq_adjusted <- NA
+  if(!exists("regConc")) regConc <- NA
+  if(!exists("regTime")) regTime <- NA
   if(!exists("Corr_XY")) Corr_XY <- NA
   if(!exists("Lambda_z")) Lambda_z <- NA
   if(!exists("Lambda_z_lower")) Lambda_z_lower <- NA
@@ -652,6 +659,7 @@ est.nca <- function(time,
   if(!exists("p_Fluctuation")) p_Fluctuation <- NA
   if(!exists("Accumulation_Index")) Accumulation_Index <- NA
   
+  
   if(!is.null(simFile) & dset == "obs"){
     if(!onlyNCA){
       NCAprm <- as.numeric(c(C0,Tmax,0,0,0,Cmax,0,0,0,Cmax_D,Tlast,Clast,AUClast,0,0,0,AUMClast,0,0,0,MRTlast,No_points_Lambda_z,AUClower_upper,0,0,0,Rsq,Rsq_adjusted,Corr_XY,Lambda_z,Lambda_z_lower,Lambda_z_upper,HL_Lambda_z,0,0,0,AUCINF_obs,0,0,0,AUCINF_D_obs,AUC_pExtrap_obs,AUC_pBack_Ext_obs,Vz_obs,Cl_obs,AUCINF_pred,0,0,0,AUCINF_D_pred,AUC_pExtrap_pred,AUC_pBack_Ext_pred,Vz_pred,Cl_pred,AUMCINF_obs,AUMC_pExtrap_obs,AUMCINF_pred,AUMC_pExtrap_pred,MRTINF_obs,MRTINF_pred,Tau,Tmin,Cmin,Cavg,AUCtau,AUMCtau,Clss,Vss_obs,Vss_pred,p_Fluctuation,Accumulation_Index))
@@ -667,6 +675,8 @@ est.nca <- function(time,
     
     names(NCAprm) <- c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","No_points_Lambda_z","AUClower_upper","Rsq","Rsq_adjusted","Corr_XY","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","AUC_pBack_Ext_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","AUC_pExtrap_pred","AUC_pBack_Ext_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred","p_Fluctuation","Accumulation_Index")
   }
-  return(NCAprm)
+  regInfo <- c("regConc"=regConc,"regTime"=regTime)
+  
+  return(list(NCAprm=NCAprm,regInfo=regInfo))
 }
 

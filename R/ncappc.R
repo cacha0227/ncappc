@@ -394,10 +394,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       time    <- as.numeric(tc$time)
       conc    <- as.numeric(tc$conc)
       cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-      NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
-                         doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                         LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-      outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
+      
+      estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+                         doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
+                         AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
+                         doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
+      NCAprm  <- estres$NCAprm
+      regInfo <- estres$regInfo
+      outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"]))
     }
     
     if (!noPlot){
@@ -482,11 +486,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         time    <- as.numeric(tc$time)
         conc    <- as.numeric(tc$conc)
         cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-        NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+        
+        estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                            doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                            AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                            doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-        outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
+        NCAprm  <- estres$NCAprm
+        regInfo <- estres$regInfo
+        outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"]))
       }
       
       if (!noPlot){
@@ -572,11 +579,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           time    <- as.numeric(tc$time)
           conc    <- as.numeric(tc$conc)
           cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-          NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+          estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                              doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                              AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                              doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-          outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
+          NCAprm  <- estres$NCAprm
+          regInfo <- estres$regInfo
+          outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"]))
         }
         
         if (!noPlot){
@@ -665,11 +674,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             time    <- as.numeric(tc$time)
             conc    <- as.numeric(tc$conc)
             cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-            NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+            estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                                doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                                AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                                doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-            outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
+            NCAprm  <- estres$NCAprm
+            regInfo <- estres$regInfo
+            outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"]))
           }
           
           if (!noPlot){
@@ -792,19 +803,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(2:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(2:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(3:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(3:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(4:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(4:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(5:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(5:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     # Subset table to print in the report
@@ -968,11 +979,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (nrow(stc)==0) next
             time    <- as.numeric(stc$time)
             conc    <- as.numeric(stc$conc)
-            NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+            estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                                doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                                AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                                doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-            simData <- rbind(simData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),NSIM=s))
+            NCAprm  <- estres$NCAprm
+            regInfo <- estres$regInfo
+            simData <- rbind(simData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"],NSIM=s))
           }
         }
         if (case == 2){
@@ -998,11 +1011,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if (nrow(stc)==0) next
               time    <- as.numeric(stc$time)
               conc    <- as.numeric(stc$conc)
-              NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+              estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                                  doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                                  AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                                  doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
+              NCAprm  <- estres$NCAprm
+              regInfo <- estres$regInfo
+              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"],NSIM=s))
             }
           }
         }
@@ -1029,11 +1044,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 if (nrow(stc)==0) next
                 time    <- as.numeric(stc$time)
                 conc    <- as.numeric(stc$conc)
-                NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+                estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                                    doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                                    AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
                                    doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
+                NCAprm  <- estres$NCAprm
+                regInfo <- estres$regInfo
+                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"],NSIM=s))
               }
             }
           }
@@ -1062,8 +1079,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   if (nrow(stc)==0) next
                   time    <- as.numeric(stc$time)
                   conc    <- as.numeric(stc$conc)
-                  NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
+                  estres  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+                                     doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
+                                     AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
+                                     doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
+                  NCAprm  <- estres$NCAprm
+                  regInfo <- estres$regInfo
+                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),regConc=regInfo["regConc"],regTime=regInfo["regTime"],NSIM=s))
                 }
               }
             }
@@ -1770,19 +1792,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(2:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(2:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(3:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(3:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(4:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(4:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      outData[,c(5:(ncol(outData)-2))] <- as.data.frame(lapply(outData[,c(5:(ncol(outData)-2))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     
