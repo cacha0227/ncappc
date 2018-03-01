@@ -181,7 +181,7 @@ est.nca <- function(time,
   
   # Exclude zero or negative concentration from calculations
   if(negConcExcl){
-    zid <- which (nconc < 0)
+    zid <- which(nconc < 0)
     if(length(zid) > 0){ntime  <- ntime[-zid]; nconc  <- nconc[-zid]}
   }
   
