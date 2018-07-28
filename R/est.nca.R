@@ -216,9 +216,9 @@ est.nca <- function(time,
     # Calculation of C0
     noBackTime <- TRUE
     if(backExtrp){
-      if(ntime[1]==0){
-        C0 <- as.numeric(nconc[1])
-      }else{
+      #if(ntime[1]==0){
+      #  C0 <- as.numeric(nconc[1])
+      #}else{
         if(adminType=="extravascular" | adminType=="iv-infusion"){
           if(doseType=="ss" && ssnPt!=0){
             C0         <- as.numeric(min(nconc))  # Min obsreved for SS data
@@ -253,7 +253,7 @@ est.nca <- function(time,
             noBackTime <- FALSE
           }
         }
-      }
+      #}
     }
     
     

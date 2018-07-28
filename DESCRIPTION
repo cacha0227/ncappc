@@ -1,8 +1,8 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
-Version: 0.2.2.0
-Authors@R: c(person("Chayan", "Acharya", role = "aut"),
-             person("Andrew C.", "Hooker", role = c("aut", "cre"), email = "andrew.hooker@farmbio.uu.se"),
+Version: 0.2.3
+Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email = "chayan.acharya@pharmetheus.com"),
+             person("Andrew C.", "Hooker", role = "aut"),
              person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),
              person("Siv", "Jonsson", role = "aut"),
              person("Mats O.", "Karlsson", role = "aut"))
@@ -30,4 +30,4 @@ Suggests:
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
